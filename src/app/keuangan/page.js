@@ -9,7 +9,7 @@ import DashboardLayout from "@/app/components/DashboardLayout";
 export default function KeuanganPage() {
   const router = useRouter();
   const supabase = createClient();
-  
+
   // --- State form / UI ---
   const [activeForm, setActiveForm] = useState(null);
   const [tanggal, setTanggal] = useState("");
@@ -182,11 +182,19 @@ if (jenisTagihan === "SPP") {
   });
 
   if (sudahAda) {
-    setMessage(
-      `SPP bulan ${bulanPembayaran} untuk siswa ${siswa} sudah dibayar.`
-    );
-    return;
-  }
+  setMessage(
+    `SPP bulan ${bulanPembayaran} untuk siswa ${siswa} sudah dibayar.`
+  );
+
+  // 🔄 reset field terkait agar tidak dobel
+  setSiswa("");
+  setBulanPembayaran("");
+  setJumlah("");
+  setJenisTagihan("");
+  
+  return;
+}
+
 }
 
 
