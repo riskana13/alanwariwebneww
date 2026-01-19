@@ -129,6 +129,25 @@ export default function KeuanganPage() {
     }
   };
 
+  // --- Cek apakah SPP siswa di bulan yang sama sudah dibayar ---
+const cekDuplikatSPP = async ({ siswa, bulanPembayaran }) => {
+  const { data, error } = await supabase
+    .from("pemasukan")
+    .select("id")
+    .eq("siswa", siswa)
+    .eq("jenis_tagihan", "SPP")
+    .eq("bulan_pembayaran", bulanPembayaran)
+    .limit(1);
+
+  if (error) {
+    console.error("Error cek duplikat SPP:", error);
+    return false;
+  }
+
+  return data && data.length > 0;
+};
+
+
   // Submit pemasukan / pengeluaran
   const handleSubmit = async (type) => {
   setMessage("");
@@ -154,6 +173,22 @@ export default function KeuanganPage() {
       return;
     }
   }
+
+  // 🔒 CEK DOUBLE INPUT SPP
+if (jenisTagihan === "SPP") {
+  const sudahAda = await cekDuplikatSPP({
+    siswa,
+    bulanPembayaran,
+  });
+
+  if (sudahAda) {
+    setMessage(
+      `SPP bulan ${bulanPembayaran} untuk siswa ${siswa} sudah dibayar.`
+    );
+    return;
+  }
+}
+
 
   const table = type === "pemasukan" ? "pemasukan" : "pengeluaran";
 
