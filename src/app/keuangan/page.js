@@ -9,7 +9,7 @@ import DashboardLayout from "@/app/components/DashboardLayout";
 export default function KeuanganPage() {
   const router = useRouter();
   const supabase = createClient();
-
+  
   // --- State form / UI ---
   const [activeForm, setActiveForm] = useState(null);
   const [tanggal, setTanggal] = useState("");
